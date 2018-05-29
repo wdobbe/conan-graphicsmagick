@@ -6,7 +6,7 @@ import os
 
 
 class GraphicksMagickConan(ConanFile):
-    name = "graphicsmagick"
+    name = "GraphicsMagick"
     version = "1.3.29"
     description = "GraphicsMagick is the swiss army knife of image processing. It provides tools and libraries which support reading, writing, and manipulating an image in over 88 major formats"
     url = "http://http://www.graphicsmagick.org/"
@@ -22,7 +22,7 @@ class GraphicksMagickConan(ConanFile):
     exports_sources = "CMakeLists.txt"
     license = "http://www.graphicsmagick.org/Copyright.html"
     source_subfolder = "GraphicsMagick-%s" % version
-    short_paths = True
+    short_paths = False
 
     def configure(self):
         if self.settings.compiler == 'Visual Studio':
