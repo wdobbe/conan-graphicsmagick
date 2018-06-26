@@ -30,12 +30,12 @@ class GraphicksMagickConan(ConanFile):
             del self.options.fPIC
 
     def requirements(self):
-        self.requires.add("zlib/1.2.11@conan/stable")
-        self.requires.add("bzip2/1.0.6@conan/stable")
+        self.requires.add("zlib/1.2.11@dynniq/stable")
+        self.requires.add("bzip2/1.0.6@dynniq/stable")
         if self.options.with_jpeg:
-            self.requires.add("libjpeg/9b@conan/testing")
+            self.requires.add("libjpeg/9b@dynniq/stable")
         if self.options.with_png:
-            self.requires.add("libpng/1.6.34@conan/testing")
+            self.requires.add("libpng/1.6.34@dynniq/stable")
 
     def source(self):
         base_url = "https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick"
