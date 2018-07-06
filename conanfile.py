@@ -18,7 +18,7 @@ class GraphicksMagickConan(ConanFile):
         "with_png": [True, False],
         "fPIC": [True, False]
     }
-    default_options = "shared=True", "with_bzlib=True", "with_jpeg=True", "with_png=True", "fPIC=True"
+    default_options = "shared=True", "with_bzlib=True", "with_jpeg=True", "with_png=True", "fPIC=True", "libjpeg:shared=True", "libpng:shared=True"
     exports_sources = "CMakeLists.txt"
     license = "http://www.graphicsmagick.org/Copyright.html"
     source_subfolder = "GraphicsMagick-%s" % version
