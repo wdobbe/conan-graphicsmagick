@@ -7,7 +7,7 @@ import os
 
 class GraphicksMagickConan(ConanFile):
     name = "GraphicsMagick"
-    version = "1.3.29"
+    version = "1.3.30"
     description = "GraphicsMagick is the swiss army knife of image processing. It provides tools and libraries which support reading, writing, and manipulating an image in over 88 major formats"
     url = "http://http://www.graphicsmagick.org/"
     settings = "os", "arch", "compiler", "build_type"
@@ -23,6 +23,7 @@ class GraphicksMagickConan(ConanFile):
     license = "http://www.graphicsmagick.org/Copyright.html"
     source_subfolder = "GraphicsMagick-%s" % version
     short_paths = False
+    build_requires = "mingw_installer/1.0@conan/stable"
 
     def configure(self):
         if self.settings.compiler == 'Visual Studio':
@@ -37,7 +38,7 @@ class GraphicksMagickConan(ConanFile):
             self.requires.add("libpng/1.6.34@dynniq/stable")
 
     def source(self):
-        base_url = "https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick"
+        base_url = "https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick"
         tools.get("%s/%s/GraphicsMagick-%s.tar.bz2" % (base_url, self.version, self.version))
 
     def build(self):
