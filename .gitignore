@@ -1,0 +1,8 @@
+/build/
+/.settings/
+
+#QtCreator local settings file
+CMakeLists.txt.user
+
+#Conan test_package build files
+test_package/build
