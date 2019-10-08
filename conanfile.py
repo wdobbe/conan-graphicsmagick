@@ -7,7 +7,7 @@ import os
 
 class GraphicksMagickConan(ConanFile):
     name = "GraphicsMagick"
-    version = "1.3.30"
+    version = "1.3.33"
     description = "GraphicsMagick is the swiss army knife of image processing. It provides tools and libraries which support reading, writing, and manipulating an image in over 88 major formats"
     url = "http://http://www.graphicsmagick.org/"
     settings = "os", "arch", "compiler", "build_type"
@@ -23,19 +23,18 @@ class GraphicksMagickConan(ConanFile):
     license = "http://www.graphicsmagick.org/Copyright.html"
     source_subfolder = "GraphicsMagick-%s" % version
     short_paths = False
-    build_requires = "mingw_installer/1.0@conan/stable"
 
     def configure(self):
         if self.settings.compiler == 'Visual Studio':
             del self.options.fPIC
 
     def requirements(self):
-        self.requires.add("zlib/1.2.11@dynniq/stable")
-        self.requires.add("bzip2/1.0.6@dynniq/stable")
+        self.requires.add("zlib/1.2.11@conan/stable")
+        self.requires.add("bzip2/1.0.8@conan/stable")
         if self.options.with_jpeg:
-            self.requires.add("libjpeg/9b@dynniq/stable")
+            self.requires.add("libjpeg/9c@bincrafters/stable")
         if self.options.with_png:
-            self.requires.add("libpng/1.6.34@dynniq/stable")
+            self.requires.add("libpng/1.6.37@bincrafters/stable")
 
     def source(self):
         base_url = "https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick"
@@ -67,16 +66,20 @@ class GraphicksMagickConan(ConanFile):
             prefix = tools.unix_path(prefix)
         config_args.append("--prefix=%s" % prefix)
 
-        # mingw-specific
-        if self.settings.os == 'Windows':
-            if self.settings.arch == "x86_64":
-                config_args.append('--build=x86_64-w64-mingw32')
-                config_args.append('--host=x86_64-w64-mingw32')
-            if self.settings.arch == "x86":
-                config_args.append('--build=i686-w64-mingw32')
-                config_args.append('--host=i686-w64-mingw32')
+        env_build_vars = env_build.vars
+        #GM configure script links a program with jpeg lib and tries to run it. If libjpeg is a shared library, the dynamic linker must be able to find it
+        if self.settings.os == 'Linux':
+            env_build_vars['LD_LIBRARY_PATH'] = ""
+            if self.options.with_jpeg:
+                env_build_vars['LD_LIBRARY_PATH'] += self.deps_cpp_info["libjpeg"].lib_paths[0]
+            if self.options.with_png:
+                if len(env_build_vars['LD_LIBRARY_PATH']) != 0:
+                    env_build_vars['LD_LIBRARY_PATH'] += ':'
+                env_build_vars['LD_LIBRARY_PATH'] += self.deps_cpp_info["libpng"].lib_paths[0]
+        print("configure with vars")
+        print(env_build_vars['LD_LIBRARY_PATH'])
 
-        env_build.configure(configure_dir=os.path.join(self.source_folder, self.source_subfolder), args=config_args)
+        env_build.configure(configure_dir=os.path.join(self.source_folder, self.source_subfolder), args=config_args, vars=env_build_vars)
         env_build.make()
         env_build.make(args=["install"])
 
